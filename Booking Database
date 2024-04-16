@@ -1,0 +1,197 @@
+create database airport;
+Use airport;
+CREATE TABLE airlines (
+airlines_id int(11) NOT NULL, 
+airlines_at_id int (11) NOT NULL,
+airlines_name varchar (255) NOT NULL,
+airlines_no varchar (255) NOT NULL,
+airlines_from int(11) NOT NULL,
+airlines_deaprture varchar(255) NOT NULL,
+airlines_to int(11) NOT NULL,
+airlines_arrival varchar(255) NOT NULL,
+airlines_travel_time varchar (255) NOT NULL,
+airlines_total_distance int(11) NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT ;
+
+desc airlines;
+
+CREATE TABLE airlines_type (
+at_id int(11) NOT NULL,
+at_name varchar (255) NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+
+desc airlines_type;
+
+CREATE TABLE booking (
+booking_id int(11) NOT NULL,
+booking_user_id varchar(255) NOT NULL,
+booking_route_id varchar (255) NOT NULL,
+booking_date varchar (255) NOT NULL,
+booking_total_fare varchar(255) NOT NULL, booking_journey_date varchar(255) NOT NULL,
+booking_seat_type varchar(255) NOT NULL,
+booking_status varchar (255) NOT NULL DEFAULT 'O'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+desc booking;
+
+CREATE TABLE city (
+city_id int(10) UNSIGNED NOT NULL,
+city_name varchar (45) NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+desc city;
+
+CREATE TABLE passenger (
+passenger_id int(11) NOT NULL,
+passenger_booking_id varchar (255) NOT NULL,
+passenger_type varchar (255) NOT NULL,
+passenger_name varchar (255) NOT NULL,
+passenger_gender varchar (255) NOT NULL,
+passenger_age varchar (255) NOT NULL,
+passenger_seat_no varchar(255) NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+desc passenger;
+
+
+CREATE TABLE route (
+route_id int (11) NOT NULL,
+route_airlines_id varchar(255) NOT NULL,
+route_from_city varchar (255) NOT NULL,
+route_from_arrival varchar(255) NOT NULL,
+route_from_departure varchar (255) NOT NULL,
+route_to_city varchar (255) NOT NULL, route_economy_fare varchar (255) NOT NULL,
+route_business_fare varchar (255) NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+
+desc route;
+
+	                       -- INDEXES AND PRIMARY KEYS --
+
+-- Indexes for table airlines --
+ALTER TABLE airlines ADD PRIMARY KEY (airlines_id);
+
+-- Indexes for table airlines_type --
+ALTER TABLE airlines_type ADD PRIMARY KEY (at_id);
+
+-- Indexes for table booking --
+ALTER TABLE booking ADD PRIMARY KEY (booking_id);
+
+-- Indexes for table city --
+ALTER TABLE city ADD PRIMARY KEY (city_id);
+
+-- Indexes for table passengar --
+ALTER TABLE passengar ADD PRIMARY KEY (passengar_id);
+
+-- Indexes for table route --
+ALTER TABLE route ADD PRIMARY KEY (route_id);
+
+--  AUTO_INCREMENT for dumped tables --
+ALTER TABLE airlines
+MODIFY airlines_id int (11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--  AUTO_INCREMENT for table airlines_type --
+ALTER TABLE airlines_type
+MODIFY at_id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+-- AUTO_INCREMENT for table booking --
+ALTER TABLE booking
+MODIFY booking_id int (11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--  AUTO_INCREMENT for table 'city' --
+ALTER TABLE city
+MODIFY City_id int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+-- AUTO_INCREMENT For table Passenger --
+ALTER TABLE passengar
+MODIFY passengar_id int (11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+-- AUTO_INCREMENT for table ' route'--
+ALTER TABLE route
+MODIFY route_id int (11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+               -- SELECT 10 FUNCTIONS IN SQL --
+
+-- Select total number of records of Airlines:--
+SELECT COUNT(*) AS 'Total Count' FROM airlines;
+
+-- Select maximum travel distance airlines record:--
+SELECT MAX(airlines_total_distance) AS 'Maximum Travel Distance', airlines.* FROM airlines;
+
+-- Select minimum travel distance airlines record:--
+SELECT MIN(airlines_total_distance) AS 'Maximum Travel Distance', airlines.* FROM airlines;
+
+-- Select average travel distance airlines record:--
+SELECT AVG(airlines_total_distance) AS 'Average Travel Distance', airlines.* FROM airlines;
+
+-- Select all the airlines name and convert it inot upper case:--
+SELECT UCASE('airlines_name') FROM airlines WHERE 1;
+
+-- Select all the airlines name and convert it into lower case:--
+SELECT LCASE('airlines_name') FROM airlines WHERE 1;
+
+-- Select all the airlines name and number, concat with ",":--
+SELECT CONCAT( 'airlines_name',',','airlines_no') FROM airlines WHERE 1;
+
+-- Removes leading and trailing spaces from Airlines Name:--
+SELECT TRIM('airlines_name') FROM airlines WHERE 1;
+
+--  Fetch only starting 3 characters of the airlines name:--
+SELECT SUBSTR('airlines_name',1,3) FROM airlines WHERE 1;
+
+-- Reverse the name of each airlines:--
+SELECT REVERSE('airlines_name') FROM airlines WHERE 1;
+
+            -- USE OF SELECT-FROM-WHERE-GROUPBY-HAVING-ORDER BY-LIMIT--
+            
+SELECT COUNT(*) as 'TotalCout', airlines.* FROM airlines WHERE airlines_from = 2 GROUP BY
+airlines_at_id HAVING TotalCout > 3 ORDER BY airlines_name LIMIT 0,3
+
+		   -- PERFORM JOIN Operations including INNER, LEFT, RIGHT, FULL and CROSS Join--
+           
+-- Inner Join Example:--
+SELECT * FROM airlines
+INNER JOIN route ON airlines.airlines_id = route.route_airlines_id;
+
+-- Left Join Example:--
+SELECT * FROM airlines
+LEFT JOIN route ON airlines.airlines_id = route.route_airlines_id;
+
+-- Right Join Example:--
+SELECT * FROM airlines
+RIGHT JOIN route ON airlines.airlines_id = route.route_airlines_id;
+
+-- Cross Join Example:--
+SELECT * FROM airlines
+FULL JOIN route ON airlines.airlines_id = route.route_airlines_id;
+
+-- FUll Join Example:--
+SELECT * FROM airlines
+FULL JOIN route ON airlines_id = route_airlines_id;
+
+           -- Perform Queries and Sub Queries Operation and display the result --
+
+SELECT * FROM airlines WHERE airlines_id IN (SELECT route_airlines_id FROM route);
+
+		   -- Perform Commit and Rollback Operations --
+           
+-- Commit and Transaction Example:
+START TRANSACTION;
+UPDATE airlines SET airlines_total_distance=9000 WHERE 1;
+COMMIT;
+
+-- Rollback Example:--
+START TRANSACTION;
+UPDATE airlines SET airlines_total_distance=7000 WHERE 1;
+Rollback;       
+
+           -- Perform 3 Examples of View Operations --
+           
+-- View 1:--
+CREATE VIEW get_all_airlines AS SELECT * FROM airlines;
+SHOW CREATE VIEW get_all_airlines ;
+SELECT * FROM get_all_airlines;
+
+-- View 2:--
+CREATE VIEW get_all_airlines_route AS
+SELECT * FROM airlines
+LEFT JOIN route ON airlines.airlines_id = route.route_airlines_id;
+
+-- View 3:--
+CREATE VIEW get_all_airlines_bookings AS
+SELECT * FROM airlines,booking, route WHERE route_id = booking_route_id AND route_airlines_id = airlines_id AND airlines_id = id;           
